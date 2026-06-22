@@ -30,3 +30,11 @@ def test_report_command_writes_json(tmp_path: Path) -> None:
     data = json.loads(out_path.read_text(encoding="utf-8"))
     assert data["report_version"] == "0.1"
     assert data["generated_at"] == "2026-06-22T12:00:00Z"
+
+
+def test_validate_command_checks_bundled_report(capsys) -> None:
+    exit_code = main(["validate"])
+
+    captured = capsys.readouterr()
+    assert exit_code == 0
+    assert "commit-provenance-v0.1.jsonl" in captured.out

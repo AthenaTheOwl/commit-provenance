@@ -25,6 +25,9 @@ def _build_parser() -> argparse.ArgumentParser:
         help="override report timestamp, useful for deterministic artifacts",
     )
 
+    validate_parser = subcommands.add_parser("validate", help="validate the bundled v0.1 report")
+    validate_parser.add_argument("--path", default="reports/commit-provenance-v0.1.jsonl")
+
     return parser
 
 
@@ -42,6 +45,18 @@ def main(argv: Sequence[str] | None = None) -> int:
             write_report(report, args.out)
         else:
             print(json.dumps(report, indent=2, sort_keys=True))
+        return 0
+
+    if args.command == "validate":
+        report_path = Path(args.path)
+        if not report_path.exists():
+            raise SystemExit(f"missing report: {report_path}")
+        lines = [line for line in report_path.read_text(encoding="utf-8").splitlines() if line.strip()]
+        if not lines:
+            raise SystemExit(f"empty report: {report_path}")
+        for line in lines:
+            json.loads(line)
+        print(f"OK {report_path} ({len(lines)} row(s))")
         return 0
 
     parser.error(f"unknown command: {args.command}")
