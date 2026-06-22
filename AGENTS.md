@@ -27,14 +27,15 @@ provenance entry fails the local pre-commit gate.
 
 ## Voice constraints
 
-- Plain assertions. No marketing words. Banned set lands in
-  `scripts/voice_lint.py::BANNED_FAIL` in spec 0002.
+- Plain assertions. No marketing words. Banned set lives in
+  `scripts/voice_lint.py::BANNED_FAIL`; spec 0001 adds the gate and
+  spec 0002 may expand the term list.
 - No antithetical reversals as a structural device.
 - Security claims are conditional. The v0 signing scheme is
   Ed25519 with a local keypair; production deployment needs key
   management this repo does not provide.
 
-## Gates (will land in spec 0002)
+## Gates (start in spec 0001 and continue in spec 0002)
 
 ```bash
 uv run pytest

@@ -32,9 +32,12 @@ the per-vendor session adapter shape.
   - read staged changes from `git diff --cached`,
   - load referenced session records,
   - construct a provenance record,
-  - sign it with the configured Ed25519 keypair,
+  - write a pending unsigned record before the commit object exists,
+  - let the post-commit hook fill `commit_sha`,
+  - sign the final record with the configured Ed25519 keypair,
   - write it to `.provenance/<short_sha>.json`,
-  - stage the provenance file as part of the same commit.
+  - stage the provenance file and amend it into the same commit with
+    a recursion guard.
 
 - **R-CP-006** — The verify CLI MUST accept a commit range, walk
   each commit, read the corresponding `.provenance/*.json`, verify
@@ -45,9 +48,9 @@ the per-vendor session adapter shape.
   the canonical JSON of the provenance record with the `signing`
   field omitted (RFC 8785 JCS).
 
-- **R-CP-008** — The pre-commit hook MUST be installable via
-  `git provenance install-hook`. The hook is opt-in per-repo; this
-  repo dogfoods it.
+- **R-CP-008** — The pre-commit, post-commit, and pre-push hooks MUST
+  be installable via `git provenance install-hook`. The hooks are
+  opt-in per-repo; this repo dogfoods them.
 
 - **R-CP-009** — A commit with no AI session metadata MUST still
   produce a provenance record with `attribution = [{kind: human,
@@ -67,3 +70,7 @@ the per-vendor session adapter shape.
   for KMS / HSM in production) and
   `decisions/DEC-CP-002-attribution-taxonomy.md` (the four kinds
   in R-CP-002 and why).
+
+- **R-CP-013** — The CLI MUST expose `git provenance keygen --out
+  <path>` to create a local Ed25519 keypair for development and
+  dogfood use. Production key management remains out of scope.

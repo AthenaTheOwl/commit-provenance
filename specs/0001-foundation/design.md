@@ -40,12 +40,12 @@ are stubs that raise `NotImplementedError`.
 2. For each `--session` argument, run the matching adapter.
 3. Build the `attribution[]` heuristic from session evidence
    (e.g. `accepted_diffs_count` against total hunks staged).
-4. Build the provenance record (commit_sha is filled by the
-   pre-commit hook after the commit object is created in a second
-   pass; the emit step writes a placeholder and the post-commit
-   hook patches the sha).
-5. Canonicalize via RFC 8785 JCS, sign with Ed25519.
-6. Write `.provenance/<short_sha>.json` and `git add` it.
+4. Build a pending provenance record without `commit_sha`; the
+   pre-commit hook stages that pending record.
+5. After the commit exists, the post-commit hook reads `HEAD`, fills
+   `commit_sha`, canonicalizes via RFC 8785 JCS, signs with Ed25519,
+   writes `.provenance/<short_sha>.json`, stages it, and amends the
+   commit once with a recursion guard.
 
 ### Sign / verify (`src/commit_provenance/sign/`,
 `src/commit_provenance/verify/`)
@@ -53,6 +53,8 @@ are stubs that raise `NotImplementedError`.
 - `sign/ed25519.py` — wraps the `cryptography` package. Key files
   live at `~/.config/commit-provenance/keys/<keyname>.{pub,key}` by
   default; path is overridable via `--keyfile`.
+- `keygen` — creates a local Ed25519 keypair for development and
+  dogfood use. Hosted KMS / HSM integration is outside spec 0001.
 - `verify/cli.py` — `git provenance verify <range>`.
 - `verify/conformance.py` — the script run in CI; reads the configured
   range from `pyproject.toml` `[tool.commit_provenance]`.
@@ -69,6 +71,9 @@ In v0 the walker is a CLI command, not yet a GitHub App surface.
 
 - `pre-commit` — bash wrapper that invokes `git provenance emit
   --staged --session-from-env` (reads `$COMMIT_PROVENANCE_SESSIONS`).
+- `post-commit` — patches the pending record with `HEAD`, signs it,
+  renames it to `.provenance/<short_sha>.json`, stages it, and amends
+  once while `COMMIT_PROVENANCE_AMENDING=1` prevents recursion.
 - `pre-push` — invokes `git provenance verify ORIG_HEAD..HEAD` and
   exits non-zero on failure.
 

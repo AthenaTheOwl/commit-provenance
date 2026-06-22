@@ -1,9 +1,10 @@
 # CommitProvenance
 
-Trustable author attribution for AI-mixed codebases. Cryptographically
-signed, machine-verifiable provenance records for every line of code
-in a repo: human-authored, AI-suggested-and-edited,
-AI-authored-and-reviewed, generated-and-merged-without-review.
+Commit-time author attribution for AI-mixed codebases. Cryptographically
+signed, machine-verifiable provenance records for every commit in a
+repo, with per-line attribution composed later by the blame walker:
+human-authored, AI-suggested-and-edited, AI-authored-and-reviewed,
+generated-and-merged-without-review.
 
 ## What this is
 
@@ -21,8 +22,7 @@ signatures on push and rejects unsigned AI-mixed commits.
 
 The schema (`provenance.schema.json`) plus the signing infrastructure
 plus the integration with Codex / Cursor / Devin session metadata is
-the first-mover advantage on becoming the EU AI Act compliance
-artifact for code-gen.
+the product surface.
 
 Buyers: regulated-industry eng teams (defense, finance, medical
 devices); open-source maintainers facing AI-PR floods; firms needing
@@ -30,18 +30,23 @@ to meet contractual "no AI-generated code" clauses.
 
 ## Status
 
-v0 scaffold. No implementation. The repo holds the README, the
-license, the agents contract, the foundation spec, and the literal
-first PR plan. The first runnable PR after this scaffold lands the
-provenance schema and a minimal `git-provenance` CLI that emits a
-provenance record for a staged change.
+v0.1 data-report slice. The repo has a product brief, system map,
+design ledger, runnable Python CLI, tests, and one checked-in report
+artifact. The signing and hook flow remains specified but not complete.
 
 ## How to run
 
-Placeholder. After implementation:
+Current report command:
 
 ```bash
-git provenance emit --session ~/.codex/sessions/2026-06-19.json \
+python -m uv run git-provenance report --out reports/commit-provenance-v0.1.jsonl
+python -m uv run git-provenance version
+```
+
+Future signed emit flow:
+
+```bash
+git provenance emit --session ~/.claude/sessions/2026-06-19.json \
   --staged --out .provenance/commit-abc1234.json
 
 git provenance verify HEAD~5..HEAD
@@ -55,20 +60,40 @@ commit-provenance/
   LICENSE
   AGENTS.md
   .gitignore
+  pyproject.toml
+  STATUS.md
+  PRODUCT_BRIEF.md
+  SYSTEM_MAP.md
+  commit_provenance/
+    __init__.py
+    cli.py
+    model.py
+    report.py
+    scoring.py
+  reports/
+    commit-provenance-v0.1.jsonl
   specs/
     0001-foundation/
       requirements.md          # R-CP-NNN
       design.md
       tasks.md
       acceptance.md
+    0002-design/
+      requirements.md
+      design.md
+      tasks.md
+      acceptance.md
   docs/
     first-pr.md
+  tests/
+    test_cli.py
+    test_report.py
 ```
 
 Downstream additions:
 
 ```
-  src/commit_provenance/
+  commit_provenance/
     schema/loader.py
     emit/cli.py                  # `git provenance emit`
     emit/session_loaders/
@@ -85,6 +110,7 @@ Downstream additions:
     session.schema.json
   hooks/
     pre-commit                   # installs as a git hook
+    post-commit
     pre-push
   github-app/
     action.yml                   # GitHub Action wrapper
