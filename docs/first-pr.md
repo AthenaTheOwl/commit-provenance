@@ -10,8 +10,8 @@ and the first session adapter (claude-code). No signing or emit yet.
 ### Files added
 
 - `pyproject.toml` — declares `commit-provenance`, CLI entry
-  `git-provenance = "commit_provenance.cli:main"`, dev deps
-  (pytest, jsonschema, cryptography, click).
+  `git-provenance = "commit_provenance.cli:main"`, `[tool.uv]
+  package = true`, and dev deps under `[dependency-groups]`.
 - `src/commit_provenance/__init__.py` — `__version__ = "0.0.1"`.
 - `src/commit_provenance/cli.py` — Click app with `version` command.
 - `schemas/provenance.schema.json` — per R-CP-002.
@@ -50,11 +50,11 @@ and the first session adapter (claude-code). No signing or emit yet.
 ## Verification
 
 ```bash
-uv pip install -e .[dev]
-git provenance version
+python -m uv sync
+python -m uv run git-provenance version
 # expect: commit-provenance 0.0.1
 
-uv run pytest
+python -m uv run pytest
 # expect: 2 tests pass
 
 python -c "

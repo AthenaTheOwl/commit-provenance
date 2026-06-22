@@ -22,10 +22,12 @@ Ordered task list for the first 2-3 PRs after the scaffold.
 ## PR 2 — sign / verify plus emit CLI
 
 - [ ] Add `src/commit_provenance/sign/ed25519.py`.
+- [ ] Add `git provenance keygen --out <path>` per R-CP-013.
 - [ ] Add `src/commit_provenance/emit/cli.py`.
 - [ ] Add `src/commit_provenance/verify/cli.py`.
 - [ ] Add `src/commit_provenance/verify/conformance.py`.
 - [ ] Add `tests/test_sign_roundtrip.py`.
+- [ ] Add `tests/test_keygen_cli.py`.
 - [ ] Add `tests/test_emit_cli.py` running emit against the fixture
       session and asserting a valid `.provenance/*.json` file.
 - [ ] Add `tests/test_verify_cli.py`.
@@ -36,7 +38,8 @@ Ordered task list for the first 2-3 PRs after the scaffold.
 
 ## PR 3 — hooks plus GitHub Action plus dogfood
 
-- [ ] Add `hooks/pre-commit` and `hooks/pre-push`.
+- [ ] Add `hooks/pre-commit`, `hooks/post-commit`, and
+      `hooks/pre-push`.
 - [ ] Add `git provenance install-hook` CLI command.
 - [ ] Add `github-app/action.yml`.
 - [ ] Add `src/commit_provenance/blame/walker.py`.

@@ -5,7 +5,8 @@
 Spec 0001 is closed when:
 
 1. The three PRs in `tasks.md` are merged.
-2. `uv pip install -e .[dev]` succeeds.
+2. `python -m uv sync` succeeds and installs the project plus dev
+   dependency group.
 3. `git provenance --help` prints the CLI surface (installable as
    the `git-provenance` subcommand).
 4. The pre-commit hook is installed on this repo and produces a
@@ -18,18 +19,18 @@ Spec 0001 is closed when:
 ## Commands to run
 
 ```bash
-uv pip install -e .[dev]
-git provenance --help
+python -m uv sync
+python -m uv run git-provenance --help
 
-uv run pytest
+python -m uv run pytest
 python scripts/voice_lint.py
 python scripts/validate_schemas.py
 
 # Generate a signing keypair (local, not for production)
-git provenance keygen --out ~/.config/commit-provenance/keys/dogfood
+python -m uv run git-provenance keygen --out ~/.config/commit-provenance/keys/dogfood
 
 # Install the hook on this repo
-git provenance install-hook
+python -m uv run git-provenance install-hook
 
 # Verify the configured range
 python -m commit_provenance.verify.conformance --range origin/main..HEAD
