@@ -38,3 +38,30 @@ def test_validate_command_checks_bundled_report(capsys) -> None:
     captured = capsys.readouterr()
     assert exit_code == 0
     assert "commit-provenance-v0.1.jsonl" in captured.out
+
+
+def test_show_command_prints_ranked_readiness(capsys) -> None:
+    exit_code = main(["show"])
+
+    captured = capsys.readouterr()
+    out = captured.out
+    assert exit_code == 0
+    # headline with readiness percentage
+    assert "repo readiness" in out
+    assert "required artifacts present" in out
+    # ranked table header + a known artifact row
+    assert "artifact" in out and "status" in out
+    assert "pyproject.toml" in out
+    # surfaces block and a headline finding
+    assert "repository surfaces:" in out
+    assert "biggest gap:" in out
+
+
+def test_show_command_handles_missing_report(tmp_path, capsys) -> None:
+    missing = tmp_path / "nope.jsonl"
+    try:
+        main(["show", "--report", str(missing)])
+    except SystemExit as exc:
+        assert "no report found" in str(exc.code)
+    else:  # pragma: no cover - show must error on missing data
+        raise AssertionError("expected SystemExit for missing report")

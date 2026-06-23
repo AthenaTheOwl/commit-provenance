@@ -52,6 +52,29 @@ git provenance emit --session ~/.claude/sessions/2026-06-19.json \
 git provenance verify HEAD~5..HEAD
 ```
 
+## live demo
+
+A read-only browser over the committed readiness report
+(`reports/commit-provenance-v0.1.jsonl`): required artifacts present vs
+missing, the readiness score, and the repository surfaces counted.
+
+CLI (no args, offline, reads the committed report):
+
+```bash
+python -m uv run git-provenance show
+```
+
+Streamlit (same data, interactive):
+
+```bash
+python -m uv run --with streamlit streamlit run streamlit_app.py
+```
+
+Streamlit Community Cloud: New app -> repo `AthenaTheOwl/commit-provenance`,
+branch `main`, main file `streamlit_app.py`.
+
+<!-- live-url: https://… -->
+
 ## Layout
 
 ```
