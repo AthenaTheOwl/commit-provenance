@@ -23,7 +23,10 @@ def _load_report(path: Path) -> dict | None:
     lines = [line for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
     if not lines:
         return None
-    return json.loads(lines[-1])
+    try:
+        return json.loads(lines[-1])
+    except json.JSONDecodeError:
+        raise SystemExit(f"report at {path} is not valid JSONL")
 
 
 def _run_show(report_path: str | None) -> int:
@@ -130,13 +133,18 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     if args.command == "validate":
         report_path = Path(args.path)
-        if not report_path.exists():
+        # is_file() rather than exists() so a directory path reports as missing
+        # instead of blowing up on read_text with IsADirectoryError.
+        if not report_path.is_file():
             raise SystemExit(f"missing report: {report_path}")
         lines = [line for line in report_path.read_text(encoding="utf-8").splitlines() if line.strip()]
         if not lines:
             raise SystemExit(f"empty report: {report_path}")
-        for line in lines:
-            json.loads(line)
+        for i, line in enumerate(lines, start=1):
+            try:
+                json.loads(line)
+            except json.JSONDecodeError:
+                raise SystemExit(f"invalid report {report_path}: line {i} is not valid JSON")
         print(f"OK {report_path} ({len(lines)} row(s))")
         return 0
 

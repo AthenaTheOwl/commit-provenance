@@ -57,6 +57,27 @@ def test_show_command_prints_ranked_readiness(capsys) -> None:
     assert "biggest gap:" in out
 
 
+def test_show_command_prints_exact_readiness_percentage(tmp_path, capsys) -> None:
+    # 2 of 4 required artifacts present -> the headline must read 50%.
+    report = {
+        "report_version": "0.1",
+        "generated_at": "2026-06-22T12:00:00Z",
+        "repository": {"name": "demo", "head": "abc123", "branch": "main"},
+        "artifacts": {"a": True, "b": True, "c": False, "d": False},
+        "score": {"required_artifacts_present": 2, "required_artifacts_total": 4},
+        "counts": {"docs": 0, "spec_files": 0, "tests": 0, "jsonl_reports": 0},
+        "missing_status_sections": [],
+    }
+    report_path = tmp_path / "report.jsonl"
+    report_path.write_text(json.dumps(report) + "\n", encoding="utf-8")
+
+    exit_code = main(["show", "--report", str(report_path)])
+
+    captured = capsys.readouterr()
+    assert exit_code == 0
+    assert "2/4 required artifacts present (50%)" in captured.out
+
+
 def test_show_command_handles_missing_report(tmp_path, capsys) -> None:
     missing = tmp_path / "nope.jsonl"
     try:
