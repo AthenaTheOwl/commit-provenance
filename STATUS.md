@@ -1,6 +1,7 @@
 # CommitProvenance status
 
 ## Current state
+- Archived 2026-07-01. The signed-receipt machinery this repo was building toward already exists in agent-notary-layer, so work continues there instead of here.
 - v0.1 is a data-report slice with a runnable `git-provenance report` command.
 - The repo has a product brief, system map, design ledger, tests, and a checked-in report artifact.
 - Spec 0001 still defines the future signed emit, verify, hook, and GitHub Action workflow.
