@@ -35,19 +35,21 @@ provenance entry fails the local pre-commit gate.
   Ed25519 with a local keypair; production deployment needs key
   management this repo does not provide.
 
-## Gates (start in spec 0001 and continue in spec 0002)
+## Gates
+
+Built and running in CI (`.github/workflows/ci.yml`):
 
 ```bash
 uv run pytest
-python scripts/voice_lint.py
-python scripts/validate_schemas.py
-python eval/signature_round_trip.py
-python eval/schema_conformance.py
 ```
 
-A PR that touches code without producing a corresponding provenance
-record fails `eval/schema_conformance.py`. (Yes, this repo dogfoods
-the gate on itself.)
+That is the only gate today. `scripts/` and `eval/` do not exist yet.
+Spec 0001 names `scripts/voice_lint.py`, `scripts/validate_schemas.py`,
+`eval/signature_round_trip.py`, and `eval/schema_conformance.py`; none
+is built. The intended rule — a PR that touches code without producing
+a corresponding provenance record fails `eval/schema_conformance.py`,
+with this repo dogfooding the gate on itself — is a plan until that
+script exists. Do not cite it as if it runs.
 
 ## Out of scope
 
