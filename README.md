@@ -2,6 +2,10 @@
 
 Status: archived 2026-07-01. Successor is agent-notary-layer, which already has the signed-receipt machinery this repo needed.
 
+See the [migration guide](docs/migration-to-notary.md) for preserving attribution
+history, carrying source gaps forward, and binding a migration manifest to a
+successor receipt without treating a new signature as proof of authorship.
+
 `git blame` tells you which human last touched a line. It cannot tell you that
 the line was suggested by Codex, edited by a person, and merged without review.
 For a codebase where some of the authors are models, that distinction is the
