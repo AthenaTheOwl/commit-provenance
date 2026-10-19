@@ -29,7 +29,6 @@ include a valid manifest, a tampered manifest, an unavailable source session and
 a commit that was amended after the old report was written. The last two should
 produce explicit evidence gaps rather than a fresh authorship claim.
 
-[AI Product Team's change workflow](https://github.com/3orionkings/ai-product-team/blob/main/workflows/process-change.md)
-offers a useful distinction here: preserve historical evidence while reassessing
-which present claim it supports. The migration manifest described above is a
-proposed integration recipe, not a shipped adapter or revived signing service.
+Preserve historical evidence while reassessing which present claim it supports.
+The migration manifest described above is a proposed integration recipe, not a
+shipped adapter or revived signing service.
