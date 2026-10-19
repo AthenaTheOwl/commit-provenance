@@ -4,6 +4,13 @@ This repository remains archived. `agent-notary-layer` is the maintained success
 for signed receipt verification. It is not a drop-in replacement for every
 attribution field in the commit-provenance scaffold.
 
+This repository never emitted per-commit attribution records: the signed
+emit-and-verify flow in `specs/0001-foundation` was not built. Its only shipped
+report, `reports/commit-provenance-v0.1.jsonl`, is one repository-readiness row
+(head SHA, artifact presence, status sections) with no author or session
+metadata. The steps below apply to that row and to any attribution records an
+adopter collected outside this repository.
+
 Inventory the existing report rows and record their file hashes before migrating.
 Keep the source commit SHA, supplied author/session metadata, collection method,
 and any known gaps as historical evidence. A missing session record stays missing;
