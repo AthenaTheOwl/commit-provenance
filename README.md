@@ -2,9 +2,10 @@
 
 Status: archived 2026-07-01. Successor is agent-notary-layer, which already has the signed-receipt machinery this repo needed.
 
-See the [migration guide](docs/migration-to-notary.md) for preserving attribution
-history, carrying source gaps forward, and binding a migration manifest to a
-successor receipt without treating a new signature as proof of authorship.
+See the [migration guide](docs/migration-to-notary.md) for carrying the v0.1
+readiness report, and any attribution records collected outside this repo, into
+agent-notary-layer receipts without treating a new signature as proof of
+authorship.
 
 `git blame` tells you which human last touched a line. It cannot tell you that
 the line was suggested by Codex, edited by a person, and merged without review.
@@ -138,7 +139,7 @@ commit_provenance/     cli, model, report, scoring
 reports/               the one v0.1 readiness report this ships
 specs/0001-foundation/ the signed emit/verify flow, specified
 specs/0002-design/     the design pass
-docs/  tests/          first-pr walkthrough, cli + report tests
+docs/  tests/          first-pr walkthrough, notary migration guide, cli + report tests
 ```
 
 Downstream, the emit/verify/sign/blame modules, the `provenance.schema.json`,
