@@ -1,4 +1,4 @@
-# Preserve attribution history when moving to agent-notary-layer
+# Moving to agent-notary-layer
 
 This repository remains archived. `agent-notary-layer` is the maintained successor
 for signed receipt verification. It is not a drop-in replacement for every
@@ -17,10 +17,15 @@ and any known gaps as historical evidence. A missing session record stays missin
 a new signature cannot reconstruct it or establish who actually wrote a line.
 
 Create an external migration manifest containing those references and hashes,
-canonicalize it by an agreed rule, then bind its action hash to a normal notary
-receipt. Verify the receipt and retain the manifest beside it. Keep old records
-readable while a consumer learns to follow the manifest; do not rewrite them into
-newly verified observations.
+canonicalize it with RFC 8785 (JCS), as agent-notary-layer RFC-001 section 1
+specifies for `action_canonical_hash`, then bind that hash to a normal notary
+receipt. The successor ships verification only, so the adopter signs the receipt
+with their own ed25519 key registered under `keys/`. Verify the receipt, then
+recompute sha256 over the JCS form of the retained manifest and compare it to the
+receipt's `action_canonical_hash`. `notary verify` never sees the manifest, so
+this comparison is what catches a tampered one. Retain the manifest beside the
+receipt. Keep old records readable while a consumer learns to follow the
+manifest; do not rewrite them into newly verified observations.
 
 The successor checks schema, signatures, chains and the delegated-hop rules it
 implements. Attribution confidence, test correctness, identity proofing and key
